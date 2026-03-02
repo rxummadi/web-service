@@ -1,31 +1,37 @@
 # Example: deploy nginx with application-chart
 # Resources are named after the release (e.g. helm install nginx -> resources named "nginx")
+application-chart:
+  image:
+    repository: nginx
+    tag: "latest"
+    pullPolicy: IfNotPresent
 
-image:
-  repository: nginx
-  tag: "latest"
-  pullPolicy: IfNotPresent
-
-port: 80
-replicaCount: 2
-
-service:
-  type: ClusterIP
   port: 80
+  replicaCount: 2
 
-serviceAccount:
-  create: true
+  service:
+    type: ClusterIP
+    port: 80
 
-hpa:
+  serviceAccount:
+    create: true
+
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+
+
+istio-routes:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 64Mi
-  limits:
-    cpu: 200m
-    memory: 128Mi
+  host: "web-service.it1.your-domain.com"
