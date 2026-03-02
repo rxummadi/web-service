@@ -33,5 +33,36 @@ application-chart:
 
 
 istio-routes:
-  enabled: true
-  host: "web-service.it1.your-domain.com"
+  virtualService:
+    enabled: true
+    # Host to match for routing (can be FQDN or service name)
+    hosts:
+      - example.local
+    gateways:
+      - mesh
+    http:
+      - match:
+          - uri:
+              prefix: /
+        route:
+          - destination:
+              host: example-service
+              port:
+                number: 80
+            weight: 100
+
+  destinationRule:
+    enabled: true
+    # Target host/service for the rule
+    host: test-example-service
+    # Traffic policy (optional)
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+    # Subsets for routing (optional). Chart will default subset label `app` to the Helm release name.
+    subsets:
+      - name: v1
+        labels: {}
+        trafficPolicy:
+          loadBalancer:
+            simple: ROUND_ROBIN
