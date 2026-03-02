@@ -37,7 +37,7 @@ istio-routes:
     enabled: true
     # Host to match for routing (can be FQDN or service name)
     hosts:
-      - example.local
+      - test-example-service
     gateways:
       - mesh
     http:
@@ -46,7 +46,7 @@ istio-routes:
               prefix: /
         route:
           - destination:
-              host: example-service
+              host: test-example-service
               port:
                 number: 80
             weight: 100
